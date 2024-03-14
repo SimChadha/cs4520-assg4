@@ -3,4 +3,6 @@
   <string name="password_hint">Password</string>
   <string name="username_hint">Username</string>
   <string name="login_button">Login</string>
+  <string name="error">Incorrect Credentials</string>
+  <string name="bad_data">Bad Data</string>
 </resources>

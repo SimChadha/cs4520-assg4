@@ -6,31 +6,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
+import com.cs4520.assignment4.databinding.ProductListItemBinding
 
-class ProductListAdapter(private val products: List<List<Any?>>) : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter(private val products: List<List<Any?>>, private val container: ViewGroup?) : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
     // Helper subclass that defines our View for each row of the table
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(binding: ProductListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val itemNameView: TextView
         val itemPriceView: TextView
         val imageView: ImageView
         val expiryView: TextView
 
         init {
-            itemNameView = view.findViewById(R.id.product_name)
-            itemPriceView = view.findViewById(R.id.product_price)
-            imageView = view.findViewById(R.id.product_image)
-            expiryView = view.findViewById(R.id.product_expiry)
+            itemNameView = binding.productName
+            itemPriceView = binding.productPrice
+            imageView = binding.productImage
+            expiryView = binding.productExpiry
         }
     }
 
     // Inflate the view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val productListView = inflater.inflate(R.layout.product_list_item, parent, false)
-        return ViewHolder(productListView)
+        val productListBinding: ProductListItemBinding =
+            ProductListItemBinding.inflate(inflater, container, false)
+        return ViewHolder(productListBinding)
     }
 
     override fun getItemCount(): Int {

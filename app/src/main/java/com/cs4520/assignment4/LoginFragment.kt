@@ -1,21 +1,31 @@
 package com.cs4520.assignment4
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.cs4520.assignment4.databinding.LoginFragmentBinding
 
 class LoginFragment : Fragment(R.layout.login_fragment) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private var _binding: LoginFragmentBinding? = null
+    private val binding get() = _binding!!
 
-        // Binds the login action to the login button
-        view.findViewById<Button>(R.id.loginButton).setOnClickListener(View.OnClickListener {
-            val userNameView = view.findViewById<EditText>(R.id.loginUser)
-            val passwordView = view.findViewById<EditText>(R.id.loginPass)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        _binding = LoginFragmentBinding.inflate(inflater, container, false)
+
+        _binding!!.loginButton.setOnClickListener(View.OnClickListener {
+            val userNameView = _binding!!.loginUser
+            val passwordView = _binding!!.loginPass
             val userName = userNameView.text.toString()
             val password = passwordView.text.toString()
 
@@ -28,9 +38,12 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             }
             // Display error toast if auth is incorrect
             else {
-                val toast = Toast.makeText(view.context, "Incorrect Credentials", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(binding.root.context, getString(R.string.error), Toast.LENGTH_SHORT)
                 toast.show()
             }
         })
+
+        return binding.root
     }
+
 }
