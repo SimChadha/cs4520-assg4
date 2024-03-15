@@ -1,0 +1,32 @@
+Github link: https://github.com/SimChadha/cs4520-assg4
+
+Run project:
+To run this project, open the project in Android studio and select an emulator to run the app on.
+If not done already, clean the project. Before running the app, make sure you have run
+the proper gradle tasks when the IDE prompts at the top.
+From there, run the app from Android studio using the default configuration to start to app.
+The default configuration will run on the module Assignment4.app.main and will launch the
+default activity (or MainActivity if you'd prefer to specify).
+
+First open the app and confirm the app fetches the data from the API or displays the correct text
+error message if the API is down or returns no products. After the products display, close the app
+and turn off internet on your device. Open the app back up and log in. Even though there is no
+internet, the app should load the results from the previous query.
+
+Project Overview:
+
+The app allows users to sign in with the credentials "admin" for both fields. From there, users
+can view and scroll through a list of products in the dataset.
+
+The project uses the structure from assignment 2 except we get data from an API using Retrofit.
+We get the data from the API using our new ApiService set up to grab data from the endpoint
+and return it to our app. Our ViewModel initiates the data query from the API and afterwards stores
+the result in a live data. Finally, the view fragment observers this live data in the view model
+and updates its own UI accordingly when a change is detected.
+
+Finally, we also store the API data in our Room database. Whenever we successfully query the Products
+from the API, we also store the results in our Room database (found in Product.kt). Then, on
+subsequent opens of the app, if we cannot reach the API due to a lack of internet connection,
+the app will simply display the data from the db. The app also displays a text error on the
+products screen for when there are no products from the API call and when the API is generally
+unavailable (such as if it returns an error)

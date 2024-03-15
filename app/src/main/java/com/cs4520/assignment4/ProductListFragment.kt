@@ -42,8 +42,6 @@ class ProductListFragment : Fragment(R.layout.product_list_fragment) {
         rvProducts.layoutManager = LinearLayoutManager(this.context)
 
         vm.products.observe(viewLifecycleOwner, Observer { res ->
-            println("Got the following data: ")
-            println(res)
             _binding!!.progressBar.visibility = View.GONE // remove loading bar once query is done
 
             var productSet: ProductList = ProductList()

@@ -43,10 +43,7 @@ class ProductListAdapter(private var products: ProductList?, private val contain
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        println("Products here: " + products)
         if (products != null && products!!.size > 0) {
-            println("Inside if")
-            println(products!![position])
             // Populate view with data from passed in products
             holder.itemNameView.text = products!![position].name
 

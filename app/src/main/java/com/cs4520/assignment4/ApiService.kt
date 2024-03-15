@@ -17,6 +17,7 @@ interface ApiService {
 }
 
 object ProductApi {
+    // Expose singleton retrofit object to run queries
     val retrofitService: ApiService by lazy {
         retrofit.create(ApiService::class.java)
     }
