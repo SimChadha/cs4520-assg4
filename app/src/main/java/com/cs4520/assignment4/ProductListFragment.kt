@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.cs4520.assignment4.databinding.ProductListFragmentBinding
 
 class ProductListFragment : Fragment(R.layout.product_list_fragment) {
@@ -27,9 +28,13 @@ class ProductListFragment : Fragment(R.layout.product_list_fragment) {
         _binding!!.progressBar.visibility = View.VISIBLE // show loading wheel
 
         val rvProducts = _binding!!.rvProducts as RecyclerView
-//        val productList = DatasetImpl().dataset
 
-        val vm = DataViewModel()
+        val db = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java, "product"
+        ).build()
+        val vm = DataViewModel(db)
+
 
         // Create adapter using data from our Dataset
         val adapter = ProductListAdapter(productList, container)
@@ -41,8 +46,19 @@ class ProductListFragment : Fragment(R.layout.product_list_fragment) {
             println(res)
             _binding!!.progressBar.visibility = View.GONE // remove loading bar once query is done
             productList = res
-            adapter.setProducts(productList)
-            adapter.notifyDataSetChanged()
+
+            if (res == null) {
+                _binding!!.errorText.text = getString(R.string.api_err)
+                _binding!!.errorText.visibility = View.VISIBLE
+            }
+            else if (res.size == 0) {
+                _binding!!.errorText.text = getString(R.string.no_res)
+                _binding!!.errorText.visibility = View.VISIBLE
+            } else {
+                _binding!!.errorText.visibility = View.GONE
+                adapter.setProducts(productList)
+                adapter.notifyDataSetChanged()
+            }
         })
         vm.getProducts()
 
