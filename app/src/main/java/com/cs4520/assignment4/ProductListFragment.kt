@@ -45,7 +45,15 @@ class ProductListFragment : Fragment(R.layout.product_list_fragment) {
             println("Got the following data: ")
             println(res)
             _binding!!.progressBar.visibility = View.GONE // remove loading bar once query is done
-            productList = res
+
+            var productSet: ProductList = ProductList()
+            if (res != null) {
+                for (p in res.distinct()) {
+                    productSet.add(p)
+                }
+            }
+
+            productList = if (productSet.size > 0) productSet else res
 
             if (res == null) {
                 _binding!!.errorText.text = getString(R.string.api_err)

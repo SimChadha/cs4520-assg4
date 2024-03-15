@@ -1,11 +1,9 @@
 package com.cs4520.assignment4
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -16,17 +14,27 @@ class DataViewModel(private val productDb: AppDatabase) : ViewModel(){
 
 
     fun getProducts() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                val productsResult = ProductApi.retrofitService.getProducts()
-                println("Result: " + productsResult.body())
-                products.value = productsResult.body()
-                if (products.value != null) {
+                val productsResult = ProductApi.retrofitService.getProducts().body()
+                println("Result: " + productsResult)
+                products.postValue(productsResult)
+                if (productsResult != null) {
+                    println("About to delete")
                     productDao.deleteAll() // clear the db before we store new data
-                    //productDao.insertAll(*products.value)
+                    println("About to insert all")
+                    productDao.insertAll(*productsResult.toTypedArray())
                 }
             } catch (e: Exception) {
-                println("SHIT BROKE!!!!")
+                val storedProducts = productDao.getAll()
+                val prodList: ProductList = ProductList()
+                for (product in storedProducts) {
+                    prodList.add(product)
+                }
+                products.postValue(prodList)
+                print("Used backup: " + products.value)
+
+
             }
         }
     }
