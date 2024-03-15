@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cs4520.assignment4.databinding.ProductListItemBinding
 
-class ProductListAdapter(private val products: List<List<Any?>>, private val container: ViewGroup?) : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+class ProductListAdapter(private var products: ProductList?, private val container: ViewGroup?) : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
     // Helper subclass that defines our View for each row of the table
     class ViewHolder(binding: ProductListItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -35,37 +35,45 @@ class ProductListAdapter(private val products: List<List<Any?>>, private val con
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        return products?.size ?: 0
+    }
+
+    fun setProducts(productList: ProductList?) {
+        this.products = productList
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // If data is malformed and we get a null price or name, display 'Bad Data'
-        // Otherwise, populate view with data from passed in products
-        holder.itemNameView.text = (products[position][0] ?: "Bad Data").toString()
-        holder.itemPriceView.text = "$" + (products[position][3] ?: "Bad Data").toString()
+        println("Products here: " + products)
+        if (products != null && products!!.size > 0) {
+            println("Inside if")
+            println(products!![position])
+            // Populate view with data from passed in products
+            holder.itemNameView.text = products!![position].name
 
-        if (products[position][2] == null) {
-            // Hide expiry view if there is no expiry data
-            holder.expiryView.visibility = View.GONE
-        }
-        else {
-            holder.expiryView.visibility = View.VISIBLE
-            // Otherwise, display the expiry
-            holder.expiryView.text = products[position][2].toString()
-        }
-        
-        val type = products[position][1].toString()
-        val image: Int
+            holder.itemPriceView.text =
+                container?.resources?.getString(R.string.price, products!![position].price.toString())
 
-        if (type == "Food") {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFD965"))
-            image = R.drawable.food
+            if (products!![position].expiryDate == null) {
+                // Hide expiry view if there is no expiry data
+                holder.expiryView.visibility = View.GONE
+            } else {
+                holder.expiryView.visibility = View.VISIBLE
+                // Otherwise, display the expiry
+                holder.expiryView.text = products!![position].expiryDate
+            }
+
+            val type = products!![position].type
+            val image: Int
+
+            if (type == "Food") {
+                holder.itemView.setBackgroundColor(Color.parseColor("#FFD965"))
+                image = R.drawable.food
+            } else {
+                holder.itemView.setBackgroundColor(Color.parseColor("#E06666"))
+                image = R.drawable.equipment
+            }
+            holder.imageView.setImageResource(image)
         }
-        else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#E06666"))
-            image = R.drawable.equipment
-        }
-        holder.imageView.setImageResource(image)
     }
 }
 

@@ -1,6 +1,5 @@
 package com.cs4520.assignment4
 
-
 sealed class Dataset {
     var dataset: List<List<Any?>> = listOf(
         listOf("Treadmill", "Equipment", null, 32),
